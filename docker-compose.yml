@@ -1,0 +1,42 @@
+version: '3.2'
+services:
+
+  db-colors:
+    container_name: db-colors
+    image: postgres:10.4
+    volumes:
+      - postgres:/var/lib/postgres/data
+    dns: 8.8.8.8
+    networks:
+      - colors
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_NAME=colors_test
+
+
+  colors:
+    build: .
+    depends_on:
+      - "db-colors"
+    dns: 8.8.8.8
+    networks:
+      - colors
+    container_name: colors
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+      - POSTGRES_NAME=colors_test
+      - POSTGRES_HOST=db-colors
+
+
+networks:
+  colors:
+    driver: bridge
+
+volumes:
+  postgres:
