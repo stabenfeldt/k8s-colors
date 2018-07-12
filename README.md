@@ -21,14 +21,6 @@ gcloud container clusters create color-cluster --num-nodes=2
 
 ## Setup PostgreSQL at GCP
 Follow instructions in https://cloud.google.com/sql/docs/postgres/connect-kubernetes-engine?authuser=1
-Take note of the following:
-```
-Database Instance ID
-DB_USER
-DB_PASSWORD
-INSTANCE_CONNECTION_NAME
-```
-
 Update your config/database.yml and k8s/colors.yml with these values.
 
 
@@ -53,4 +45,20 @@ kubectl logs colors-d9f744dc-8svw5 -c colors
 
 ```
 
-###  gcloud sql instances describe staging
+### Connect to your Rails app
+
+First, check what your external IP is:
+
+```
+kubectl get svc
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)        AGE
+colors       LoadBalancer   10.55.245.192   35.228.111.217   80:30746/TCP   1h
+kubernetes   ClusterIP      10.55.240.1     <none>           443/TCP        1h
+```
+
+```
+curl 35.228.111.217 # => No response! :-/
+```
+
+Why will it not
+
