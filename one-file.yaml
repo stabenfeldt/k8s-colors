@@ -32,6 +32,13 @@ spec:
         tier: frontend
     spec:
       containers:
+      - name: cloudsql-proxy
+        image: gcr.io/cloudsql-docker/gce-proxy:1.11
+        command: ["/cloud_sql_proxy",
+                  "-instances=<INSTANCE_CONNECTION_NAME>=tcp:5432",
+                  "-credential_file=/secrets/cloudsql/credentials.json"]
+
+
       - name: new-colors-app
         # Replace [YOUR_PROJECT_ID] with your project ID.
         image: docker.io/stabenfeldt/colors:latest
