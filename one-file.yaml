@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: new-colors-frontend
+  labels:
+    app: new-colors
+    tier: frontend
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: http-server
+  selector:
+    app: new-colors
+    tier: frontend
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: new-colors-frontend
+  labels:
+    app: new-colors
+    tier: frontend
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: new-colors
+        tier: frontend
+    spec:
+      containers:
+      - name: new-colors-app
+        # Replace [YOUR_PROJECT_ID] with your project ID.
+        image: docker.io/stabenfeldt/colors:latest
+        imagePullPolicy: Always
+        env:
+        - name: FORMATION
+          value: web=1
+        ports:
+        - name: http-server
+          containerPort: 3000
