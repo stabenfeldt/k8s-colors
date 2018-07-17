@@ -10,7 +10,7 @@ open http://localhost:3000
 # Building and pushing the image to remote repository
 ```
 docker build . -t stabenfeldt/colors:latest
-docker push
+docker push stabenfeldt/colors:latest
 ```
 
 ## Create a GCP cluster
