@@ -80,6 +80,6 @@ spec:
   type: LoadBalancer
   ports:
   - port: 80
-    targetPort: http-server
+    targetPort: 3000
   selector:
     app: colors
