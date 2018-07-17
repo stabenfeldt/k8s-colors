@@ -23,21 +23,6 @@ spec:
             - name: http-server
               containerPort: 3000
 
-          # livenessProbe:
-          #   httpGet:
-          #     path: /_health
-          #     port: 3000
-          #   initialDelaySeconds: 10
-          #   timeoutSeconds: 1
-          # readinessProbe:
-          #   httpGet:
-          #     path: /_health
-          #     port: 3000
-          #   initialDelaySeconds: 10
-          #   timeoutSeconds: 1
-
-          # The following environment variables will contain the database host,
-          # user and password to connect to the PostgreSQL instance.
           env:
             - name: POSTGRES_HOST
               value: 127.0.0.1:5432
