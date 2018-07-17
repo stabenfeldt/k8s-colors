@@ -37,8 +37,12 @@ spec:
         image: docker.io/stabenfeldt/colors:latest
         imagePullPolicy: Always
         env:
-        - name: FORMATION
-          value: web=1
+          - name: FORMATION
+            value: web=1
         ports:
         - name: http-server
           containerPort: 3000
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
