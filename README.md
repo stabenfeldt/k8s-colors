@@ -26,7 +26,6 @@ Update your config/database.yml and k8s/colors.yml with these values.
 
 ## Deploy your app
 ```
-kubectl apply -f k8s/colors.yml
 export PROJECT_ID="your-project-id"
 ./update-vars-and-run.sh
 kubectl get pods
