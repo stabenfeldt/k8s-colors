@@ -50,13 +50,25 @@ spec:
         - name: colors-app
           image: docker.io/stabenfeldt/colors:latest
           imagePullPolicy: Always
+
           env:
             - name: RAILS_LOG_TO_STDOUT
               value: "true"
             - name: RAILS_ENV
               value: development
             - name: POSTGRES_HOST
-              value: 127.0.0.1:5432
+              value: 127.0.0.1
+            - name: POSTGRES_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: username
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cloudsql-db-credentials
+                  key: password
+
           ports:
           - name: http-server
             containerPort: 3000
