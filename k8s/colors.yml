@@ -1,32 +1,65 @@
-# from https://cloud.google.com/sql/docs/postgres/connect-kubernetes-engine
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: v1
+kind: Service
 metadata:
-  name: colors
+  name: colors-frontend
   labels:
     app: colors
-
+    tier: frontend
 spec:
-  replicas: 2
+  type: LoadBalancer
+  ports:
+  - port: 80
+    targetPort: http-server
   selector:
-    matchLabels:
-      app: colors
+    app: colors
+    tier: frontend
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: colors-frontend
+  labels:
+    app: colors
+    tier: frontend
+spec:
+  replicas: 3
   template:
     metadata:
       labels:
         app: colors
+        tier: frontend
     spec:
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials
+
       containers:
-        - name: colors
-          image: docker.io/stabenfeldt/colors:latest
-          ports:
-            - name: http-server
-              containerPort: 3000
+        - name: cloudsql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.11
+          command: ["/cloud_sql_proxy",
+                    "-instances=telenor-min-familie:europe-west1:development=tcp:5432",
+                    "-credential_file=/secrets/cloudsql/credentials.json"]
+          volumeMounts:
+              - name: cloudsql-instance-credentials
+                mountPath: /secrets/cloudsql
+                readOnly: true
+
+
+        - name: colors-app
+          image: docker.io/stabenfeldt/colors:1
+          imagePullPolicy: Always
 
           env:
+            - name: RAILS_LOG_TO_STDOUT
+              value: "true"
+            - name: RAILS_ENV
+              value: development
             - name: POSTGRES_HOST
               value: 127.0.0.1:5432
-            - name: POSTGRES_USER
+            - name: POSTGRES_USERNAME
               valueFrom:
                 secretKeyRef:
                   name: cloudsql-db-credentials
@@ -37,32 +70,6 @@ spec:
                   name: cloudsql-db-credentials
                   key: password
 
-        - name: cloudsql-proxy
-          image: gcr.io/cloudsql-docker/gce-proxy:1.11
-          command: ["/cloud_sql_proxy",
-                    "-instances=PROJECT_ID:europe-west1:staging=tcp:5432",
-                    "-credential_file=/secrets/cloudsql/credentials.json"]
-          volumeMounts:
-            - name: cloudsql-instance-credentials
-              mountPath: /secrets/cloudsql
-              readOnly: true
-
-      volumes:
-        - name: cloudsql-instance-credentials
-          secret:
-            secretName: cloudsql-instance-credentials
-
----
-
-
-apiVersion: v1
-kind: Service
-metadata:
-  name: colors
-spec:
-  type: LoadBalancer
-  ports:
-  - port: 80
-    targetPort: 3000
-  selector:
-    app: colors
+          ports:
+          - name: http-server
+            containerPort: 3000
