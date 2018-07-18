@@ -1,11 +1,21 @@
 FROM ruby:2.4-slim-jessie
 
 RUN apt-get update
-RUN apt-get install -y libpq-dev libgmp-dev libxml2-dev libxslt-dev
-RUN apt-get install -y build-essential patch ruby-dev zlib1g-dev liblzma-dev
-RUN apt-get install -y nodejs
+RUN apt-get install -y  \
+  build-essential       \
+  libgmp-dev            \
+  liblzma-dev           \
+  libpq-dev             \
+  libxml2-dev           \
+  libxslt-dev           \
+  nodejs                \
+  patch                 \
+  ruby-dev              \
+  zlib1g-dev
+
 
 WORKDIR /app
+
 COPY Gemfile* /app/
 RUN bundle install --jobs 20 --retry 5
 COPY . .
