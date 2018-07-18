@@ -1,3 +1,5 @@
+# Remember to update MY-INSTANCE
+
 apiVersion: v1
 kind: Service
 metadata:
@@ -40,7 +42,7 @@ spec:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.11
           command: ["/cloud_sql_proxy",
-                    "-instances=telenor-min-familie:europe-west1:development=tcp:5432",
+                    "-instances=MY-INSTANCE:europe-west1:development=tcp:5432",
                     "-credential_file=/secrets/cloudsql/credentials.json"]
           volumeMounts:
               - name: cloudsql-instance-credentials
