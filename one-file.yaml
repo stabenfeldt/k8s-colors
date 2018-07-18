@@ -35,6 +35,7 @@ spec:
         - name: cloudsql-instance-credentials
           secret:
             secretName: cloudsql-instance-credentials
+
       containers:
         - name: cloudsql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.11
@@ -48,7 +49,7 @@ spec:
 
 
         - name: colors-app
-          image: docker.io/stabenfeldt/colors:latest
+          image: docker.io/stabenfeldt/colors:1
           imagePullPolicy: Always
 
           env:
@@ -57,7 +58,7 @@ spec:
             - name: RAILS_ENV
               value: development
             - name: POSTGRES_HOST
-              value: 127.0.0.1
+              value: 127.0.0.1:5432
             - name: POSTGRES_USERNAME
               valueFrom:
                 secretKeyRef:
