@@ -10,7 +10,7 @@ services:
     networks:
       - colors
     environment:
-      - POSTGRES_USER=user
+      - POSTGRES_USERNAME=user
       - POSTGRES_PASSWORD=pass
       - POSTGRES_NAME=colors_test
 
@@ -28,7 +28,7 @@ services:
     ports:
       - "3000:3000"
     environment:
-      - POSTGRES_USER=user
+      - POSTGRES_USERNAME=user
       - POSTGRES_PASSWORD=pass
       - POSTGRES_NAME=colors_test
       - POSTGRES_HOST=db-colors
