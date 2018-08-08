@@ -3,7 +3,7 @@
 ## Running the app locally
 ```
 docker-compose up -d
-docker-compose run colors rake db:create db:migrate
+docker-compose exec colors rake db:create db:migrate
 open http://localhost:3000
 ```
 
